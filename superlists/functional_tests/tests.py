@@ -9,7 +9,7 @@ class NewVisitorTest(LiveServerTestCase):
         chrome_options = Options()
         chrome_options.add_argument('headless')
         # chrome_options.binary_location = '/usr/bin/google-chrome-stable'
-        chrome_options.add_argument('window-size=1904x950')
+        chrome_options.add_argument('window-size=1024x768')
         browser = webdriver.Chrome(chrome_options=chrome_options)
         browser.implicitly_wait(10)
         return browser
@@ -84,4 +84,13 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('Buy peacock feathers', page_text)
         self.check_for_row_in_list_table('1: Buy milk')
 
-        self.fail('Finish Test!')
+    def test_layout_styling(self):
+        self.browser = self.createBrowser()
+        self.browser.get(self.live_server_url)
+
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+                inputbox.location['x'] + inputbox.size['width']/2,
+                512,
+                delta=5
+                )
