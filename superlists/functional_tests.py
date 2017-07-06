@@ -15,7 +15,7 @@ class NewVisitorTest(unittest.TestCase):
         # to check out its homepage
         self.browser.get('http://localhost:8000')
         # She notices the page title and header mention to-do lists
-        self.assertEqual('To-Do', self.browser.title)
+        self.assertEqual('To-Do List', self.browser.title)
         # She is invited to enter a to-do item straight away
         # She types "Buy peacock feathers" into a text box (Edith's hobby
         # is tying fly-fishing lures)
