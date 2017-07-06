@@ -20,6 +20,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.browser = self.createBrowser()
         staging_server = os.environ.get('STAGING_SERVER')
         if staging_server:
+            print('Found ENV variable: ' + staging_server + '\n')
             self.live_server_url = 'http://' + staging_server
 
     def tearDown(self):
