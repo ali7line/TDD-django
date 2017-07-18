@@ -1,7 +1,5 @@
 from django.core.urlresolvers import resolve
-from django.template.loader import render_to_string
 from django.test import TestCase
-from django.http import HttpRequest
 
 from .views import homepage
 
@@ -12,8 +10,10 @@ class SmokeTest(TestCase):
         self.assertEqual(found.func, homepage)
 
     def test_homepage_returns_correct_HTML(self):
-        request = HttpRequest()
-        response = homepage(request)
-        expected_html = render_to_string('home.html')
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'home.html')
 
-        self.assertEqual(response.content.decode(), expected_html)
+    def test_homepage_can_save_post_request(self):
+        response = self.client.post('/', {'item_text': 'new item list'})
+
+        self.assertIn('new item list', response.content.decode())

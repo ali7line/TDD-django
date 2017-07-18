@@ -13,10 +13,13 @@ src="http://html5shiv.googlecode.com/svn/trunk/html5.js">
 
 <body>
     <h1>To-Do List</h1>
-    <input id="id_new_item" placeholder="Enter a to-do item" maxlength="31" name="name" type="text" />
+    <form action="" method="POST">
+        <input id="id_new_item" placeholder="Enter a to-do item" maxlength="31" name="item_text" type="text" />
+        {% csrf_token %}
+    </form>
 
     <table id="id_list_table">
-       <tr><td>1: Buy peacock feathers</td></tr> 
+        <tr><td>1: {{ new_item_text }}</td></tr> 
     </table>
 
 </body>
