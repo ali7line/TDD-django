@@ -5,15 +5,15 @@ import unittest
 
 class NewVisitorTest(unittest.TestCase):
     def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
+        self.browser = webdriver.PhantomJS()
+        self.browser.implicitly_wait(10)
 
     def tearDown(self):
         self.browser.quit()
 
     def check_for_row_in_list_table(self, raw_text):
         table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
+        rows = table.find_elements_by_class_name('item_row')
         self.assertIn(raw_text, [row.text for row in rows])
 
     def enter_text_into_list(self, raw_text):
@@ -38,6 +38,7 @@ class NewVisitorTest(unittest.TestCase):
         # When she hits enter, the page updates, and now the page lists
         # "1: Buy peacock feathers" as an item in a to-do list
         self.enter_text_into_list('Buy peacock feathers')
+
         self.check_for_row_in_list_table('1: Buy peacock feathers')
 
         # There is still a text box inviting her to add another item. She

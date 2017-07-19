@@ -13,13 +13,15 @@ src="http://html5shiv.googlecode.com/svn/trunk/html5.js">
 
 <body>
     <h1>To-Do List</h1>
-    <form action="" method="POST">
-        <input id="id_new_item" placeholder="Enter a to-do item" maxlength="31" name="item_text" type="text" />
+    <form action="/" method="POST">
+        <input id="id_new_item" placeholder="Enter a to-do item" name="item_text" type="text" />
         {% csrf_token %}
     </form>
 
     <table id="id_list_table">
-        <tr><td>1: {{ new_item_text }}</td></tr> 
+        {% for item in items %}
+        <tr class="item_row"><td>{{ forloop.counter }}: {{ item.text }}</td></tr> 
+        {% endfor %}
     </table>
 
 </body>

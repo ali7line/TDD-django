@@ -14,10 +14,31 @@ class SmokeTest(TestCase):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
 
-    def test_homepage_can_save_post_request(self):
+    def test_homepage_can_save_POST_request(self):
+        self.client.post('/', {'item_text': 'new item list'})
+
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'new item list')
+
+    def test_homepage_redirects_after_POST_request(self):
         response = self.client.post('/', {'item_text': 'new item list'})
 
-        self.assertIn('new item list', response.content.decode())
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+    def test_homepage_save_item_when_necessary(self):
+        self.client.get('/')
+        self.assertEqual(Item.objects.count(), 0)
+
+    def test_homepage_displays_all_list_items(self):
+        Item.objects.create(text='first item in list')
+        Item.objects.create(text='second item in list')
+
+        response = self.client.get('/')
+
+        self.assertIn('first item in list', response.content.decode())
+        self.assertIn('second item in list', response.content.decode())
 
 
 class ItemListTest(TestCase):
