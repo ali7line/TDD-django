@@ -5,7 +5,7 @@ import unittest
 
 class NewVisitorTest(unittest.TestCase):
     def setUp(self):
-        self.browser = webdriver.PhantomJS()
+        self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(10)
 
     def tearDown(self):
