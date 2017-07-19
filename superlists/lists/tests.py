@@ -17,18 +17,24 @@ class HomepageTest(TestCase):
 
 class ListViewTest(TestCase):
     def test_uses_list_template(self):
-        response = self.client.get('/lists/the-only-list/')
+        list_ = List.objects.create()
+        response = self.client.get('/lists/%d/' % (list_.id,))
         self.assertTemplateUsed(response, 'lists/list.html')
 
-    def test_display_all_items(self):
-        list_ = List.objects.create()
-        Item.objects.create(text='first item in list', list=list_)
-        Item.objects.create(text='second item in list', list=list_)
+    def test_display_only_items_for_that_list(self):
+        correct_list = List.objects.create()
+        Item.objects.create(text='first item in list', list=correct_list)
+        Item.objects.create(text='second item in list', list=correct_list)
 
-        response = self.client.get('/lists/the-only-list/')
+        other_list = List.objects.create()
+        Item.objects.create(text='first item in other list', list=other_list)
+        Item.objects.create(text='second item in other list', list=other_list)
+
+        response = self.client.get('/lists/%d/' % (correct_list.id,))
 
         self.assertContains(response, 'first item in list')
         self.assertContains(response, 'second item in list')
+        self.assertNotContains(response, 'other')
 
 
 class NewListTest(TestCase):
@@ -42,7 +48,8 @@ class NewListTest(TestCase):
     def test_redirects_after_POST_request(self):
         response = self.client.post('/lists/new', {'item_text': 'new item list'})
 
-        self.assertRedirects(response, '/lists/the-only-list/')
+        list_ = List.objects.first()
+        self.assertRedirects(response, '/lists/%d/' % (list_.id,))
 
 
 class ListAndItemModelTest(TestCase):
