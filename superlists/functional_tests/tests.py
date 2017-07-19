@@ -8,7 +8,7 @@ class NewVisitorTest(LiveServerTestCase):
     def createBrowser(self):
         chrome_options = Options()
         chrome_options.add_argument('headless')
-        chrome_options.binary_location = '/usr/bin/google-chrome-stable'
+        # chrome_options.binary_location = '/usr/bin/google-chrome-stable'
         chrome_options.add_argument('window-size=1904x950')
         browser = webdriver.Chrome(chrome_options=chrome_options)
         browser.implicitly_wait(10)
