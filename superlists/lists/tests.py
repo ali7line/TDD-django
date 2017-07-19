@@ -25,20 +25,26 @@ class SmokeTest(TestCase):
         response = self.client.post('/', {'item_text': 'new item list'})
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/lists/the-only-list/')
 
     def test_homepage_save_item_when_necessary(self):
         self.client.get('/')
         self.assertEqual(Item.objects.count(), 0)
 
-    def test_homepage_displays_all_list_items(self):
+
+class ListViewTest(TestCase):
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/the-only-list/')
+        self.assertTemplateUsed(response, 'lists/list.html')
+
+    def test_display_all_items(self):
         Item.objects.create(text='first item in list')
         Item.objects.create(text='second item in list')
 
-        response = self.client.get('/')
+        response = self.client.get('/lists/the-only-list/')
 
-        self.assertIn('first item in list', response.content.decode())
-        self.assertIn('second item in list', response.content.decode())
+        self.assertContains(response, 'first item in list')
+        self.assertContains(response, 'second item in list')
 
 
 class ItemListTest(TestCase):
