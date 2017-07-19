@@ -5,31 +5,14 @@ from .views import homepage
 from .models import Item
 
 
-class SmokeTest(TestCase):
+class HomepageTest(TestCase):
     def test_root_url_resolves_to_homepage(self):
         found = resolve('/')
         self.assertEqual(found.func, homepage)
 
-    def test_homepage_returns_correct_HTML(self):
+    def test_returns_correct_HTML(self):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
-
-    def test_homepage_can_save_POST_request(self):
-        self.client.post('/', {'item_text': 'new item list'})
-
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text, 'new item list')
-
-    def test_homepage_redirects_after_POST_request(self):
-        response = self.client.post('/', {'item_text': 'new item list'})
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/lists/the-only-list/')
-
-    def test_homepage_save_item_when_necessary(self):
-        self.client.get('/')
-        self.assertEqual(Item.objects.count(), 0)
 
 
 class ListViewTest(TestCase):
@@ -45,6 +28,20 @@ class ListViewTest(TestCase):
 
         self.assertContains(response, 'first item in list')
         self.assertContains(response, 'second item in list')
+
+
+class NewListTest(TestCase):
+    def test_saving_POST_request(self):
+        self.client.post('/lists/new', {'item_text': 'new item list'})
+
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'new item list')
+
+    def test_redirects_after_POST_request(self):
+        response = self.client.post('/lists/new', {'item_text': 'new item list'})
+
+        self.assertRedirects(response, '/lists/the-only-list/')
 
 
 class ItemListTest(TestCase):
