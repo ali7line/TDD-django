@@ -1,9 +1,9 @@
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
-import unittest
+from django.test import LiveServerTestCase
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(10)
@@ -24,7 +24,7 @@ class NewVisitorTest(unittest.TestCase):
     def test_visitor_cresates_list_and_retrieves_it_later(self):
         # Edith has heard about a cool new online to-do app. She goes
         # to check out its homepage
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
         # She notices the page title and header mention to-do lists
         self.assertEqual('To-Do List', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
@@ -54,7 +54,3 @@ class NewVisitorTest(unittest.TestCase):
         # She visits that URL - her to-do list is still there.
         # Satisfied, she goes back to sleep
         self.fail('Finish Test!')
-
-
-if __name__ == '__main__':
-    unittest.main()
