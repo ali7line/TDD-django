@@ -1,3 +1,4 @@
+from pyvirtualdisplay import Display
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 from django.test import LiveServerTestCase
@@ -5,11 +6,14 @@ from django.test import LiveServerTestCase
 
 class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
+        self.display = Display(visible=0, size=(800, 600))
+        self.display.start()
         self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(10)
 
     def tearDown(self):
         self.browser.quit()
+        self.display.stop()
 
     def check_for_row_in_list_table(self, raw_text):
         table = self.browser.find_element_by_id('id_list_table')
