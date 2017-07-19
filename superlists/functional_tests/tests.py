@@ -1,19 +1,24 @@
-from pyvirtualdisplay import Display
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from django.test import LiveServerTestCase
 
 
 class NewVisitorTest(LiveServerTestCase):
+    def createBrowser(self):
+        chrome_options = Options()
+        chrome_options.add_argument('headless')
+        chrome_options.binary_location = '/usr/bin/google-chrome-stable'
+        chrome_options.add_argument('window-size=1904x950')
+        browser = webdriver.Chrome(chrome_options=chrome_options)
+        browser.implicitly_wait(10)
+        return browser
+
     def setUp(self):
-        self.display = Display(visible=0, size=(800, 600))
-        self.display.start()
-        self.browser = webdriver.Chrome()
-        self.browser.implicitly_wait(10)
+        self.browser = self.createBrowser()
 
     def tearDown(self):
         self.browser.quit()
-        self.display.stop()
 
     def check_for_row_in_list_table(self, raw_text):
         table = self.browser.find_element_by_id('id_list_table')
@@ -63,7 +68,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # A new user , Francis, comes along to the site
         # and sees a blank page asking him to enter new item
-        self.browser = webdriver.Chrome()
+        self.browser = self.createBrowser()
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
 
