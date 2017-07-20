@@ -37,11 +37,29 @@ class ListViewTest(TestCase):
         self.assertNotContains(response, 'other')
 
 
+class NewItemTest(TestCase):
+    def test_saving_POST_request(self):
+        list_ = List.objects.create()
+        self.client.post('/lists/%d/add_item' % (list_.id,), {'item_text': 'new item list'})
+
+        self.assertEqual(Item.objects.count(), 1)
+        self.assertEqual(List.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'new item list')
+
+    def test_redirects_after_POST_request(self):
+        list_ = List.objects.create()
+        response = self.client.post('/lists/%d/add_item' % (list_.id,), {'item_text': 'new item list'})
+
+        self.assertRedirects(response, '/lists/%d/' % (list_.id,))
+
+
 class NewListTest(TestCase):
     def test_saving_POST_request(self):
         self.client.post('/lists/new', {'item_text': 'new item list'})
 
         self.assertEqual(Item.objects.count(), 1)
+        self.assertEqual(List.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, 'new item list')
 
