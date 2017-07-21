@@ -1,12 +1,14 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.css" %}" />
 <meta charset="utf-8">
 <title>
 {% block title %}
 
-{% endblock %}
+{% endblock title %}
 </title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,9 +18,12 @@ src="http://html5shiv.googlecode.com/svn/trunk/html5.js">
 </head>
 
 <body>
-    {% block content %}
-    
-    {% endblock %}
+    <h1> {% block header_text %}{% endblock header_text %}</h1>
+    <form action="{% block form_action %}{% endblock form_action %}" method="POST">
+        <input id="id_new_item" placeholder="Enter a to-do item" name="item_text" type="text" />
+        {% csrf_token %}
+    </form>
+    {% block content %}{% endblock content %}
 </body>
 
 </html>

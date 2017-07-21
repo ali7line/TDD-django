@@ -6,6 +6,6 @@ import lists.urls as lists_urls
 
 urlpatterns = [
         url(r'^$', homepage, name='root'),
-        url('^lists/', include(lists_urls), name='new_list'),
+        url('^lists/', include(lists_urls, namespace='lists')),
         url(r'^admin/', admin.site.urls),
 ]
