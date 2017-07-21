@@ -8,10 +8,10 @@ To-Do List
 
 {% block form_action %}/lists/{{ list_.id }}/add_item{% endblock %}
 
-{% block content %}
-<table id="id_list_table">
+{% block table %}
+<table id="id_list_table" class="table">
     {% for item in items %}
     <tr class="item_row"><td>{{ forloop.counter }}: {{ item.text }}</td></tr> 
     {% endfor %}
 </table>
-{% endblock content %}
+{% endblock table %}
