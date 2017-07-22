@@ -1,10 +1,12 @@
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
+import os
 
 
 class NewVisitorTest(StaticLiveServerTestCase):
+
     def createBrowser(self):
         chrome_options = Options()
         chrome_options.add_argument('headless')
@@ -16,6 +18,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = self.createBrowser()
+        staging_server = os.environ.get('STAGING_SERVER')
+        if staging_server:
+            self.live_server_url = 'http://' + staging_server
 
     def tearDown(self):
         self.browser.quit()
@@ -83,7 +88,6 @@ class NewVisitorTest(StaticLiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.check_for_row_in_list_table('1: Buy milk')
-        self.fail('Finish Test!')
 
     def test_layout_styling(self):
         self.browser = self.createBrowser()
